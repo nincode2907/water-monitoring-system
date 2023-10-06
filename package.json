@@ -4,7 +4,8 @@
   "description": "A web can get protocol from sensor at water source, then display to brower charts for easy viewing and save to database.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest",
+    "start": "nodemon index.js"
   },
   "repository": {
     "type": "git",
@@ -21,5 +22,15 @@
   "bugs": {
     "url": "https://github.com/nincode2907/water-monitoring-system/issues"
   },
-  "homepage": "https://github.com/nincode2907/water-monitoring-system#readme"
+  "homepage": "https://github.com/nincode2907/water-monitoring-system#readme",
+  "dependencies": {
+    "express": "^4.18.2",
+    "http": "^0.0.1-security",
+    "nodemon": "^3.0.1",
+    "ws": "^8.14.2"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "mqtt": "^5.0.5"
+  }
 }
