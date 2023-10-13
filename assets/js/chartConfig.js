@@ -2,34 +2,26 @@ const chartConfigs = [
     {
         id: "chart-line-tasks",
         classSensor: "sersor-1",
-        data: [],
-        interval: 1000,
-        timeUpdate: new Date(),
-        status: "It's normal"
+        status: "It's normal",
+        key_object_mqtt: "humidity",
     },
     {
         id: "chart-line-tasks2",
         classSensor: "sersor-2",
-        data: [],
-        interval: 10000,
-        timeUpdate: new Date(),
-        status: "It's strong"
+        status: "It's strong",
+        key_object_mqtt: "wind_speed_km_per_hour",
     },
     {
         id: "chart-line-tasks3",
         classSensor: "sersor-3",
-        data: [],
-        interval: 60000,
-        timeUpdate: new Date(),
-        status: "It's so hot"
+        status: "It's so hot",
+        key_object_mqtt: "water_temperature",
     },
     {
         id: "chart-line-tasks4",
         classSensor: "sersor-4",
-        data: [],
-        interval: 180000,
-        timeUpdate: new Date(),
-        status: "It's normal"
+        status: "It's normal",
+        key_object_mqtt: "wave_height_in_meter",
     },
 ];
 

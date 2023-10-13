@@ -1,56 +1,37 @@
 const express = require('express');
 const path = require('path');
-const WebSocket = require('ws');
 
-const config = require('./config');
+const config = require('./process/config');
 const { 
     runMqtt,
-    data
-} = require('./mqtt');
+    data,
+    sseStream
+} = require('./process/mqtt');
+const {getData} = require('./process/controller');
 
 const app = express();
 const port = config.serverSystem.port || 3000;
 const server = app.listen(port, () => console.log("listening on port http://localhost:" + port))
-const wss = new WebSocket.Server({server});
-var dataOld = [];
 
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
 runMqtt();
 
-function sendToClients() {
-    const jsonData = JSON.stringify(data);
-    let logger = '';
-    
-    if((JSON.stringify(dataOld) !== jsonData)) {
-        wss.clients.forEach(client => {
-            if(client.readyState === WebSocket.OPEN) {
-                client.send(jsonData, (err) => {
-                    if(!err) {
-                        let time = new Date()
-                        console.log(`Gửi dữ liệu xuống client thành công vào lúc ${time.toLocaleString()}`);
-                        console.log(jsonData);
-                    } else {
-                        console.log('Gửi dữ liệu xuống client thất bại');
-                    }
-                })         
-            }
-        })
-        logger = "Dữ liệu được làm mới."
-        dataOld = JSON.parse(jsonData)
-    } else {
-        logger = "Dữ liệu bị trùng lặp. Không cần thiết gửi đi tới client."
-    }
-    console.log(logger);
-}
-
-setInterval(() => {
-    let time = new Date()
-    console.log(`Kiểm tra server vào lúc ${time.toLocaleString()}`);
-    sendToClients()
-},60000)
+// setInterval(() => {
+//     let time = new Date()
+//     console.log(`Kiểm tra server vào lúc ${time.toLocaleString()}`);
+// },60000)
 
 app.get('/', (req,res) => {
     res.sendFile(path.join(__dirname, '/index.html'));
 })
 
+app.get('/data', getData);
+
+app.get('/sse', (req, res) => {
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    sseStream.pipe(res);
+  });

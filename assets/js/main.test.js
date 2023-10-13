@@ -1,5 +1,62 @@
 const { calculationTimeDiff } = require('./methodCal.js');
 
+function formatMessage(message) {
+  const keyValuePairs = message.replace('station1:', '').split(',').map(pair => pair.trim());
+  const formattedObject = {};
+
+  keyValuePairs.forEach(pair => {
+    const [key, value] = pair.split('=').map(item => item.trim());
+    formattedObject[key] = isNaN(value) ? value : parseFloat(value);
+  });
+
+  return formattedObject;
+}
+
+describe('formatMessage', () => {
+  test('should return an object with formatted key-value pairs', () => {
+    const message = 'station1: key1=value1, key2=value2, key3=value3';
+    const expected = {
+      key1: 'value1',
+      key2: 'value2',
+      key3: 'value3'
+    };
+    expect(formatMessage(message)).toEqual(expected);
+  });
+
+  test('should handle decimal values correctly', () => {
+    const message = 'station1: key1=1.23, key2=4.56';
+    const expected = {
+      key1: 1.23,
+      key2: 4.56
+    };
+    expect(formatMessage(message)).toEqual(expected);
+  });
+
+  test('should handle string values correctly', () => {
+    const message = 'station1: key1=hello, key2=world';
+    const expected = {
+      key1: 'hello',
+      key2: 'world'
+    };
+    expect(formatMessage(message)).toEqual(expected);
+  });
+
+  test('should handle empty message correctly', () => {
+    const message = '';
+    const expected = {};
+    expect(formatMessage(message)).toEqual(expected);
+  });
+
+  test('should handle invalid input correctly', () => {
+    const message = 'station1: key1=1.23, key2=hello';
+    const expected = {
+      key1: 1.23,
+      key2: 'hello'
+    };
+    expect(formatMessage(message)).toEqual(expected);
+  });
+});
+
 
 describe('calculationTimeDiff', () => {
   test('should return correct time difference string for recent time', () => {

@@ -1,4 +1,6 @@
-const calculationTimeDiff = (timeNotify) => {
+const duration = 4000
+
+export const calculationTimeDiff = (timeNotify) => {
     let timeDiffString = ''
 
     if(timeNotify) {
@@ -35,6 +37,48 @@ const calculationTimeDiff = (timeNotify) => {
     return timeDiffString
   }
 
-module.exports = {
-  calculationTimeDiff
-}
+// async function sleep(delayTime) {
+//   return new Promise(resolve => setTimeout(resolve, delayTime));
+// }
+
+// export const animationToChangeValue = async (targetElement, newValue) => {
+//   if (!targetElement || typeof newValue !== 'number') {
+//     throw new Error('Invalid input');
+//   }
+//   let currentValue = parseFloat(targetElement.innerText);
+//   let difference = Math.abs(newValue - currentValue);
+//   let delayTime = duration / difference /20;
+//   if (currentValue <= newValue) {
+//     for(let i = currentValue; i <= newValue; i += 0.05) {
+//       targetElement.innerText = Math.round(i * 10) / 10;
+//       await sleep(delayTime);
+//     }
+//   } else if (currentValue >= newValue) {
+//     for(let i = currentValue; i >= newValue; i -= 0.05) {
+//       targetElement.innerText = Math.round(i * 10) / 10;
+//       await sleep(delayTime);
+//     }
+//   }
+// }
+
+export const animationToChangeValue = async (targetElement, newValue) => {
+  if (!targetElement || typeof newValue !== 'number') {
+    throw new Error('Invalid input');
+  }
+  let currentValue = parseFloat(targetElement.innerText);
+  let startTime;
+
+  function animate(currentTime) {
+    if (!startTime) startTime = currentTime;
+    const progress = (currentTime - startTime) / duration;
+    if (progress < 1) {
+      const interpolatedValue = currentValue + (newValue - currentValue) * progress;
+      targetElement.innerText = Math.round(interpolatedValue * 10) / 10;
+      requestAnimationFrame(animate);
+    } else {
+      targetElement.innerText = newValue;
+    }
+  }
+
+  requestAnimationFrame(animate);
+};
